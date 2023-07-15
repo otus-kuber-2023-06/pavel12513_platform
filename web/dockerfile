@@ -1,0 +1,15 @@
+FROM ubuntu
+
+RUN mkdir /app
+WORKDIR /app
+RUN apt-get update && apt-get install nginx -y
+RUN usermod -u 1001 www-data && groupmod -g 1001 www-data
+RUN chown -R www-data:www-data /app && chmod -R 755 /app
+RUN chown -R www-data:www-data /var/log/nginx
+RUN touch /var/run/nginx.pid && chown -R www-data:www-data /var/run/nginx.pid
+COPY default.conf /etc/nginx/sites-available/default
+COPY index.html /usr/share/nginx/html
+COPY homework.html /app
+EXPOSE 8000
+
+CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
